@@ -1,2 +1,2 @@
 # discordbot
-Mein eigener, erster Discordbot auf Basis von discord.py
+Mein eigener, erster Discordbot für meinen Discord auf Basis von discord.py
