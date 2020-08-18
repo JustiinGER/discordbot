@@ -1,2 +1,2 @@
 discord.py==1.4.1
-mysql-connector==2.2.9
+mysql-connector-python==8.0.21
