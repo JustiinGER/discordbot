@@ -7,6 +7,8 @@ from discord.ext.commands import CommandNotFound
 d = datetime.datetime.now()
 t = datetime.datetime.now()
 
+token = open("token.txt", "r").readline()
+
 client = commands.Bot(command_prefix=".")
 
 @client.event
@@ -36,3 +38,5 @@ async def userinfo_error(ctx, error):
         await ctx.send("Bitte gebe einen User an.")
     if isinstance(error, commands.BadArgument):
         await ctx.send("Diesen User kann ich nicht finden.")
+
+client.run(token)
