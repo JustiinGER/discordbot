@@ -21,11 +21,11 @@ async def on_command_error(ctx, error):
 async def clear(ctx, amount=1):
     await ctx.channel.purge(limit=amount + 1)
     if amount == 1:
-        await ctx.send(f"Es wurde **{amount}** Nachricht gelöscht!")
+        clearmassage = await ctx.send(f"Es wurde **{amount}** Nachricht gelöscht!")
     else:
-        await ctx.send(f"Es wurden **{amount}** Nachrichten gelöscht!")
+        clearmassage = await ctx.send(f"Es wurden **{amount}** Nachrichten gelöscht!")
     await asyncio.sleep(5)
-    await ctx.channel.purge(limit=1)
+    await clearmassage.delete()
     
 @client.command()
 @commands.has_permissions(kick_members=True)
