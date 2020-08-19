@@ -10,11 +10,13 @@ token = open("token.txt", "r").readline()
 
 client = commands.Bot(command_prefix=".")
 
+
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         await ctx.send("Dieser Befehl konnte nicht gefunden werden.")
-        
+
+
 @client.command(aliases=["8ball", "miesmuschel", "mm"])
 async def _8ball(ctx, *, question):
     responses = ["Definitiv!",
@@ -36,12 +38,14 @@ async def _8ball(ctx, *, question):
                  "Nerv mich nicht!"]
     emiesmuschel = discord.Embed(title="Magische Miesmuschel", timestamp=t.utcnow(),
                                  colour=random.randint(0, 0xffffff))
-    emiesmuschel.set_thumbnail(url="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTiHVLVXiIyGiVSYa1IZO5AMSibq8kZ4ZK2ti5YO6WMU9B_YqrL&usqp=CAU")
+    emiesmuschel.set_thumbnail(
+        url="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTiHVLVXiIyGiVSYa1IZO5AMSibq8kZ4ZK2ti5YO6WMU9B_YqrL&usqp=CAU")
     emiesmuschel.add_field(name="Frage:", value=question, inline=False)
     emiesmuschel.add_field(name="Antwort:", value=random.choice(responses))
     emiesmuschel.set_footer(text="Frage angefordert von: {}".format(ctx.author.name))
     await ctx.send(embed=emiesmuschel)
-    
+
+
 @client.command(aliases=["witz", "witze"])
 async def joke(ctx):
     jokes = ["Wer sitzt auf dem Baum und ruft Aha? \n Ein Uhu mit Sprachfehler!",
@@ -61,22 +65,26 @@ async def joke(ctx):
              "Was ist das Weiße in Vogelkacke? \n Auch Vogelkacke.",
              "Wo machen Kühe Urlaub? \n In Kuhba"]
     ejoke = discord.Embed(title="Flachwitze", timestamp=t.utcnow(),
-                                 colour=random.randint(0, 0xffffff))
-    ejoke.set_thumbnail(url="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/microsoft/209/face-with-tears-of-joy_1f602.png")
+                          colour=random.randint(0, 0xffffff))
+    ejoke.set_thumbnail(
+        url="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/microsoft/209/face-with-tears-of-joy_1f602.png")
     ejoke.add_field(name="Witz:", value=random.choice(jokes))
     ejoke.set_footer(text="Witz angefordert von: {}".format(ctx.author.name))
     await ctx.send(embed=ejoke)
-    
+
+
 @client.command()
 async def otaku(ctx):
     number = random.randint(0, 100)
     await ctx.send(f"Du bist zu **{number}%** ein Otaku!")
-    
+
+
 @client.command()
 async def lovecalc(ctx, name1, name2):
     number = random.randint(0, 100)
     await ctx.send(f"{name1} und {name2} passen zu **{number}%** zusammen!")
-    
+
+
 @client.command()
 async def rich(ctx, member: discord.Member = None):
     money = random.randint(0, 10000000)
@@ -85,25 +93,33 @@ async def rich(ctx, member: discord.Member = None):
     else:
         member = member
     await ctx.send(f"{member} hat ein geschätztes Vermögen von **{money}€**!")
-    
+
+
 @client.command()
-async def roll(ctx, upto: int):
-    number = random.randint(0, upto)
+async def roll(ctx, upto: int = None):
+    if upto is None:
+        number = random.randint(0, 100)
+    else:
+        number = random.randint(0, upto)
     await ctx.send(f"Die Zahl lautet **{number}**")
-    
+
+
 @_8ball.error
 async def _8ball_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Du musst eine Frage angeben.")
-        
- @lovecalc.error
+
+
+@lovecalc.error
 async def lovecalc_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Du musst zwei Namen angeben!")
-        
- @roll.error
+
+
+@roll.error
 async def roll_error(ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("Du musst eine Höchstzahl angeben.")
-        
-client.run(token)        
+    if isinstance(error, commands.BadArgument):
+        await ctx.send("Das ist keine Zahl.")
+
+
+client.run(token)
