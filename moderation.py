@@ -88,6 +88,12 @@ async def unlock(ctx):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
     await ctx.send("Der Channel wurde entsperrt!")
     
+@client.command()
+@commands.has_permissions(manage_nicknames=True)
+async def changenick(ctx, member: discord.Member, name):
+    await member.edit(nick=name)
+    await ctx.send(f"Der User **{member}** wurde zu **{name}** umbenannt!")
+    
 @clear.error
 async def clear_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
@@ -156,5 +162,12 @@ async def lock_error(ctx, error):
 async def unlock_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("Dir fehlt die manage_channels Berechtigung!")
+        
+@changenick.error
+async def changenick_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("Dir fehlt die manage_nicknames Berechtigung!")
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Entweder hast du keinen User oder keinen Nicknamen angegeben!")
 
 client.run(token)
