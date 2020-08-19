@@ -69,6 +69,11 @@ async def userinfo(ctx, member: discord.Member):
     eprofil.add_field(name="ID:", value=member.id, inline=False)
     await ctx.send(embed=eprofil)
     
+@client.command()
+async def slowmode(ctx, seconds: int):
+    await ctx.channel.edit(slowmode_delay=seconds)
+    await ctx.send(f"Slowmode auf **{seconds}** Sekunden gesetzt!")
+    
 @clear.error
 async def clear_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
@@ -120,5 +125,12 @@ async def userinfo_error(ctx, error):
         await ctx.send("Bitte gebe einen User an.")
     if isinstance(error, commands.BadArgument):
         await ctx.send("Diesen User kann ich nicht finden.")
+        
+@slowmode.error
+async def slowmode_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Gebe die Zeit in Sekunden an, auf welche der Slowmode gesetzt werden soll")
+    if isinstance(error, commands.BadArgument):
+        await ctx.send("Das ist keine gültige Zeitangabe!")
 
 client.run(token)
