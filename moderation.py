@@ -70,9 +70,23 @@ async def userinfo(ctx, member: discord.Member):
     await ctx.send(embed=eprofil)
     
 @client.command()
+@commands.has_permissions(manage_channels=True)
 async def slowmode(ctx, seconds: int):
     await ctx.channel.edit(slowmode_delay=seconds)
     await ctx.send(f"Slowmode auf **{seconds}** Sekunden gesetzt!")
+    
+@client.command()
+@commands.has_permissions(manage_channels=True)
+async def lock(ctx):
+    await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=False)
+    await ctx.send("Der Channel wurde gesperrt!")
+
+
+@client.command()
+@commands.has_permissions(manage_channels=True)
+async def unlock(ctx):
+    await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
+    await ctx.send("Der Channel wurde entsperrt!")
     
 @clear.error
 async def clear_error(ctx, error):
@@ -132,5 +146,15 @@ async def slowmode_error(ctx, error):
         await ctx.send("Gebe die Zeit in Sekunden an, auf welche der Slowmode gesetzt werden soll")
     if isinstance(error, commands.BadArgument):
         await ctx.send("Das ist keine gültige Zeitangabe!")
+        
+@lock.error
+async def lock_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("Dir fehlt die manage_channels Berechtigung!")
+
+@unlock.error
+async def unlock_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send("Dir fehlt die manage_channels Berechtigung!")
 
 client.run(token)
