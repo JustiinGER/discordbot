@@ -67,9 +67,43 @@ async def joke(ctx):
     ejoke.set_footer(text="Witz angefordert von: {}".format(ctx.author.name))
     await ctx.send(embed=ejoke)
     
+@client.command()
+async def otaku(ctx):
+    number = random.randint(0, 100)
+    await ctx.send(f"Du bist zu **{number}%** ein Otaku!")
+    
+@client.command()
+async def lovecalc(ctx, name1, name2):
+    number = random.randint(0, 100)
+    await ctx.send(f"{name1} und {name2} passen zu **{number}%** zusammen!")
+    
+@client.command()
+async def rich(ctx, member: discord.Member = None):
+    money = random.randint(0, 10000000)
+    if member is None:
+        member = ctx.message.author
+    else:
+        member = member
+    await ctx.send(f"{member} hat ein geschätztes Vermögen von **{money}€**!")
+    
+@client.command()
+async def roll(ctx, upto: int):
+    number = random.randint(0, upto)
+    await ctx.send(f"Die Zahl lautet **{number}**")
+    
 @_8ball.error
 async def _8ball_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Du musst eine Frage angeben.")
+        
+ @lovecalc.error
+async def lovecalc_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Du musst zwei Namen angeben!")
+        
+ @roll.error
+async def roll_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Du musst eine Höchstzahl angeben.")
         
 client.run(token)        
