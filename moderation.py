@@ -5,7 +5,6 @@ import asyncio
 from discord.ext import commands
 from discord.ext.commands import CommandNotFound
 
-d = datetime.datetime.now()
 t = datetime.datetime.now()
 
 token = open("token.txt", "r").readline()
