@@ -11,11 +11,13 @@ token = open("token.txt", "r").readline()
 
 client = commands.Bot(command_prefix=".")
 
+
 @client.event
 async def on_command_error(ctx, error):
     if isinstance(error, CommandNotFound):
         await ctx.send("Dieser Befehl konnte nicht gefunden werden.")
-        
+
+
 @client.command()
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, amount=1):
@@ -26,7 +28,8 @@ async def clear(ctx, amount=1):
         clearmassage = await ctx.send(f"Es wurden **{amount}** Nachrichten gelöscht!")
     await asyncio.sleep(5)
     await clearmassage.delete()
-    
+
+
 @client.command()
 @commands.has_permissions(kick_members=True)
 async def kick(ctx, member: discord.Member, *, reason=None):
@@ -39,7 +42,8 @@ async def kick(ctx, member: discord.Member, *, reason=None):
 async def ban(ctx, member: discord.Member, *, reason=None):
     await member.ban(reason=reason)
     await ctx.send(f"Der User **{member}** wurde wegen **{reason}** vom Server gebannt!")
-    
+
+
 @client.command()
 @commands.has_permissions(manage_roles=True)
 async def addrole(ctx, member: discord.Member, role: discord.Role):
@@ -52,6 +56,7 @@ async def addrole(ctx, member: discord.Member, role: discord.Role):
 async def removerole(ctx, member: discord.Member, role: discord.Role):
     await member.remove_roles(role)
     await ctx.send(f"Dem User **{member}** wurde die Rolle **{role}** entfernt!")
+
 
 @client.command(aliases=["ui"])
 async def userinfo(ctx, member: discord.Member):
@@ -68,13 +73,15 @@ async def userinfo(ctx, member: discord.Member):
     eprofil.add_field(name="Status:", value=member.status, inline=True)
     eprofil.add_field(name="ID:", value=member.id, inline=False)
     await ctx.send(embed=eprofil)
-    
+
+
 @client.command()
 @commands.has_permissions(manage_channels=True)
 async def slowmode(ctx, seconds: int):
     await ctx.channel.edit(slowmode_delay=seconds)
     await ctx.send(f"Slowmode auf **{seconds}** Sekunden gesetzt!")
-    
+
+
 @client.command()
 @commands.has_permissions(manage_channels=True)
 async def lock(ctx):
@@ -87,20 +94,30 @@ async def lock(ctx):
 async def unlock(ctx):
     await ctx.channel.set_permissions(ctx.guild.default_role, send_messages=True)
     await ctx.send("Der Channel wurde entsperrt!")
-    
+
+
 @client.command()
 @commands.has_permissions(manage_nicknames=True)
 async def changenick(ctx, member: discord.Member, name):
     await member.edit(nick=name)
     await ctx.send(f"Der User **{member}** wurde zu **{name}** umbenannt!")
-    
+
+
+@client.command()
+@commands.has_permissions(manage_channels=True)
+async def ccn(ctx, channel: discord.TextChannel, *, newname):
+    await channel.edit(name=newname)
+    await ctx.send(f"Der Channel wurde zu **{newname}** umbenannt.")
+
+
 @clear.error
 async def clear_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Bitte gebe an, wie viele Nachrichten gelöscht werden sollen.")
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("Dir fehlt die manage_messages Berechtigung!")
-        
+
+
 @ban.error
 async def ban_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
@@ -119,7 +136,8 @@ async def kick_error(ctx, error):
         await ctx.send("Dir fehlt die kick_members Berechtigung!")
     if isinstance(error, commands.BadArgument):
         await ctx.send("Ich konnte diesen User nicht finden.")
-        
+
+
 @addrole.error
 async def addrole_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
@@ -139,35 +157,47 @@ async def removerole_error(ctx, error):
     if isinstance(error, commands.BadArgument):
         await ctx.send("Ich konnte diesen User oder diese Rolle nicht finden.")
 
+
 @userinfo.error
 async def userinfo_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Bitte gebe einen User an.")
     if isinstance(error, commands.BadArgument):
         await ctx.send("Diesen User kann ich nicht finden.")
-        
+
+
 @slowmode.error
 async def slowmode_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Gebe die Zeit in Sekunden an, auf welche der Slowmode gesetzt werden soll")
     if isinstance(error, commands.BadArgument):
         await ctx.send("Das ist keine gültige Zeitangabe!")
-        
+
+
 @lock.error
 async def lock_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("Dir fehlt die manage_channels Berechtigung!")
 
+
 @unlock.error
 async def unlock_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("Dir fehlt die manage_channels Berechtigung!")
-        
+
+
 @changenick.error
 async def changenick_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
         await ctx.send("Dir fehlt die manage_nicknames Berechtigung!")
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Entweder hast du keinen User oder keinen Nicknamen angegeben!")
+
+
+@ccn.error
+async def ccn_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Du hast entweder keinen Kanal ausgewählt oder keinen Namen angegeben!")
+
 
 client.run(token)
