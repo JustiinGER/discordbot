@@ -18,7 +18,7 @@ async def on_command_error(ctx, error):
         await ctx.send("Dieser Befehl konnte nicht gefunden werden.")
 
 
-@client.command()
+@client.command(aliases=["delete"])
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, amount=1):
     await ctx.channel.purge(limit=amount + 1)
@@ -44,14 +44,14 @@ async def ban(ctx, member: discord.Member, *, reason=None):
     await ctx.send(f"Der User **{member}** wurde wegen **{reason}** vom Server gebannt!")
 
 
-@client.command()
+@client.command(aliases=["ar"])
 @commands.has_permissions(manage_roles=True)
 async def addrole(ctx, member: discord.Member, role: discord.Role):
     await member.add_roles(role)
     await ctx.send(f"Der User **{member}** hat die Rolle **{role}** erhalten!")
 
 
-@client.command()
+@client.command(aliases=["rr"])
 @commands.has_permissions(manage_roles=True)
 async def removerole(ctx, member: discord.Member, role: discord.Role):
     await member.remove_roles(role)
@@ -75,7 +75,7 @@ async def userinfo(ctx, member: discord.Member):
     await ctx.send(embed=eprofil)
 
 
-@client.command()
+@client.command(aliases=["sm"])
 @commands.has_permissions(manage_channels=True)
 async def slowmode(ctx, seconds: int):
     await ctx.channel.edit(slowmode_delay=seconds)
@@ -96,16 +96,16 @@ async def unlock(ctx):
     await ctx.send("Der Channel wurde entsperrt!")
 
 
-@client.command()
+@client.command(aliases=["cn"])
 @commands.has_permissions(manage_nicknames=True)
 async def changenick(ctx, member: discord.Member, name):
     await member.edit(nick=name)
     await ctx.send(f"Der User **{member}** wurde zu **{name}** umbenannt!")
 
 
-@client.command()
+@client.command(aliases=["ccn"])
 @commands.has_permissions(manage_channels=True)
-async def ccn(ctx, channel: discord.TextChannel, *, newname):
+async def changechannelname(ctx, channel: discord.TextChannel, *, newname):
     await channel.edit(name=newname)
     await ctx.send(f"Der Channel wurde zu **{newname}** umbenannt.")
 
@@ -194,8 +194,8 @@ async def changenick_error(ctx, error):
         await ctx.send("Entweder hast du keinen User oder keinen Nicknamen angegeben!")
 
 
-@ccn.error
-async def ccn_error(ctx, error):
+@changechannelname.error
+async def changechannelname_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send("Du hast entweder keinen Kanal ausgewählt oder keinen Namen angegeben!")
 
