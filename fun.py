@@ -30,7 +30,6 @@ async def _8ball(ctx, *, question):
                  "Nö",
                  "Auf jeden Fall!",
                  "Vielleicht",
-                 "Das ist mir zu privat",
                  "Ich will darüber nicht reden",
                  "Die Sterne stehen gut",
                  "Ich tendiere zu: Ja",
@@ -104,6 +103,25 @@ async def roll(ctx, upto: int = None):
     await ctx.send(f"Die Zahl lautet **{number}**")
 
 
+@client.command()
+async def regel(ctx, nummer: int):
+    if nummer == 34:
+        await ctx.send("Regel 34 besagt: Wenn es existiert, dann gibt es auch pornografische Inhalte davon.")
+    else:
+        await ctx.send("Diese Regel konnte ich leider nicht finden.")
+
+
+@client.command()
+async def kill(ctx, user: discord.User):
+    possibilities = [f"**{ctx.author.name}** hat **{user.name}** mit einem Stein erschlagen.",
+                     f"**{ctx.author.name}** hat **{user.name}** mit einer Schaufel erschlagen.",
+                     f"**{ctx.author.name}** hat **{user.name}** mit einem Dildo zu tode penetriert."]
+    ekill = discord.Embed(timestamp=t.utcnow(),
+                          colour=random.randint(0, 0xffffff))
+    ekill.add_field(name="Killfeed:", value=random.choice(possibilities))
+    await ctx.send(embed=ekill)
+
+
 @_8ball.error
 async def _8ball_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
@@ -120,6 +138,12 @@ async def lovecalc_error(ctx, error):
 async def roll_error(ctx, error):
     if isinstance(error, commands.BadArgument):
         await ctx.send("Das ist keine Zahl.")
+
+
+@kill.error
+async def kill_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send("Du hast keinen User angegeben!")
 
 
 client.run(token)
